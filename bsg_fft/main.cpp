@@ -1,10 +1,10 @@
 #include <iostream>
-#include <stdlib.h> 
-
 #include "pre_compute.h"
-
+#include <stdlib.h> 
+#include<math.h>
+#include <cstdio>
 #define MAX 200
-#define PI 3.14
+#define PI 3.1415926535897
 
 using namespace std;
 
@@ -17,7 +17,7 @@ void firstHalf(Complex* f, int N)
 	W[1] = conv_from_polar(1.0, -2. * PI / N);					//
 	for (int i = 2; i < N / 2; i++)								//	
 		W[i] = pow(W[1], i);									//////////////////////				
-	////////////////////////////////////////////////////////////////////////////
+																////////////////////////////////////////////////////////////////////////////
 	int n = 1;															//////
 	int a = N / 2;											/// Ham firstHalf duoc su dung de tinh N / 2 
 	for (int j = 0; j < log2(N) - 1; j++) {					//diem dau cua chuoi input dau vao. 
@@ -83,31 +83,55 @@ void merge(Complex* f, int N)
 	}
 }
 
+/*void initialData() {
+	int N = 64;																		//
+	Complex f[64];																	//
+															////////////
+	const int nFreqs = 5;													 //Phan nay se duoc thuc
+	double freq[nFreqs] = { 2, 5, 11, 17, 29 }; // Chon vung tan so de		 // hien boi processor1 
+	for (int i = 0; i<N; i++) {					// kiem tra chi o nhung		 //khi trien khai tren he thong BSG
+		f[i].real = 0.0; f[i].image = 0.0;      //tan so nay moi co tin hieu // (phan chuan bi du lieu)
+		for (int j = 0; j<nFreqs; j++)										//
+			f[i].real = f[i].real + sin(2 * PI*freq[j] * i / N);			//
+	}																	//////////////////////
+	// chuyen N/2 phan tu dau toi core1 
+	// chuyen N/2 phan tu sau  toi core2
+	//... 
+}*/
+
 int main()
 {
-	int N = 8;																						//  Khoi tao du lieu 
-	Complex f[8] = { { 4, 0 },{ 2, 0 },{ 0, 0 },{ -2, 0 },{ -4, 0 },{ 2, 0 },{ 0, 0 },{ -2, 0 } };	// N can la luy thua cua 2
+	int N = 64;																		//
+	Complex f[64];																	//
+	Complex F[64];																////////////
+	const int nFreqs = 5;													 //Phan nay se duoc thuc
+	double freq[nFreqs] = { 2, 5, 11, 17, 29 }; // Chon vung tan so de		 // hien boi processor1 
+	for (int i = 0; i<N; i++) {					// kiem tra chi o nhung		 //khi trien khai tren he thong BSG
+		f[i].real = 0.0; f[i].image = 0.0;      //tan so nay moi co tin hieu // (phan chuan bi du lieu)
+		for (int j = 0; j<nFreqs; j++)										//
+			f[i].real = f[i].real + sin(2 * PI*freq[j] * i / N);			//
+		F[i] = f[i]; //f la chuo khoi tao ban dau o mien thoi gian       //
+	}																	//////////////////////
 
-	/////////////////////////////////////////////////////////////////////////
-	ordina(f, 8);	//Sap xep lai vi tri cua day input
 
-	firstHalf(f, N); // Thuc hien tinh toan cho N/2 diem dau, du kien assign cho processor 1
+	ordina(F, N);		//Sap xep lai vi tri cua day input
 
-	secondHalf(f, N); //Thuc hien tinh toan cho N/2 diem sau, du kien assign cho processor 2
-	
-	merge(f, N); // Merge 2 chuoi N/2 phan tu o tren, assign cho processor 3
+	firstHalf(F, N);   // Thuc hien tinh toan cho N/2 diem dau, du kien assign cho processor 2
+	secondHalf(F, N);		//Thuc hien tinh toan cho N/2 diem sau, du kien assign cho processor 3
+	merge(F, N);			 // Merge 2 chuoi N/2 phan tu o tren, assign cho processor 4
 
-	/*
-		if(id == 1)
-			firstHalf(f, N);
-		else if(id == 2)
-			....
+   /*
+	if(id == 2)
+	firstHalf(f, N);
+	else if(id == 3)
+	....
 	*/
-	/////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////
 
-	cout << "Result" << endl;
-	for (int j = 0; j < 8; j++)
-		cout << f[j].real << " " << f[j].image << endl;
-	return 0;
+
+	for (int i = 0; i<N; i++) {
+		printf("% 3d\t%+.3f\t%+.3f\t\n",
+			i, f[i].real, sqrt(F[i].real*F[i].real + F[i].image*F[i].image));
+	}
 
 }
