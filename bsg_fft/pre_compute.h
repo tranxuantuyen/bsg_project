@@ -1,8 +1,5 @@
-#ifndef COMPLEX_H
-#define COMPLEX_H
 
 
-#include<math.h>
 struct Complex
 {
 	double real;
@@ -19,4 +16,11 @@ Complex multiply(Complex left, Complex right);
 
 Complex pow(Complex v, int n);
 
-#endif
+int log2(int N);
+
+int check(int n);
+
+int reverse(int N, int n);
+
+
+void ordina(Complex* f1, int N);
