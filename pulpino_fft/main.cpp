@@ -8,7 +8,7 @@
 // + ref: output de kiem tra ket qua
 
 
-static short wprBase[] = {
+static int wprBase[] = {
 	32767,  32758,  32729,  32679,  32610,  32522,  32413,  32286,
 	32138,  31972,  31786,  31581,  31357,  31114,  30853,  30572,
 	30274,  29957,  29622,  29269,  28899,  28511,  28106,  27684,
@@ -27,7 +27,7 @@ static short wprBase[] = {
 	-32138, -32286, -32413, -32522, -32610, -32679, -32729, -32758,
 };
 
-static short wpiBase[] = {
+static int wpiBase[] = {
 	0,    804,   1608,   2411,   3212,   4011,   4808,   5602,
 	6393,   7180,   7962,   8740,   9512,  10279,  11039,  11793,
 	12540,  13279,  14010,  14733,  15447,  16151,  16846,  17531,
@@ -48,7 +48,7 @@ static short wpiBase[] = {
 
 
 
-short ref[2 * NINPUTS] = {
+int ref[2 * NINPUTS] = {
 	/* outputs for test 1 */
 	6, 13, -47, -11, 91, 38, 44, 30, 48, 21, 48, 13,
 	71, 26, 92, 41, 162, 76, 598, 139, -1002, -60, -284, 59,
@@ -96,7 +96,7 @@ short ref[2 * NINPUTS] = {
 };
 
 
-short buf[2 * NINPUTS] = { 2, 1, -4, -1, -3, -1, -8, -2, -10, -2, -11, -2, -23, -3, 11, -1,
+int buf[2 * NINPUTS] = { 2, 1, -4, -1, -3, -1, -8, -2, -10, -2, -11, -2, -23, -3, 11, -1,
 32, 0, 10, 0, 11, 1, 8, 2, 3, 2, 3, 3, -7, 3, -5, 2, 1, 2, -4, 2,
 -4, 2, -4, 1, -9, 0, -5, 0, -4, -1, -8, -1, -5, -2, -2, -2, 0, -2,
 0, -3, -6, -3, -7, -3, -2, -3, 3, -2, 3, -2, 8, -1, 15, 0, 10, 1,
@@ -125,18 +125,18 @@ short buf[2 * NINPUTS] = { 2, 1, -4, -1, -3, -1, -8, -2, -10, -2, -11, -2, -23, 
 
 
 
-void fft_pre(short *data, int len) {
+void fft_pre(int *data, int len) {
 
 	int max = len;
 	len <<= 1;
 	int wstep = 1;
 
-	short *wpr = wprBase;
-	short *wpi = wpiBase;
+	int *wpr = wprBase;
+	int *wpi = wpiBase;
 
 	for (int m = 0; m < max; m += 2) {
-		short wr = *wpr;
-		short wi = *wpi;
+		int wr = *wpr;
+		int wi = *wpi;
 		wpr += wstep;
 		wpi += wstep;
 
@@ -145,8 +145,8 @@ void fft_pre(short *data, int len) {
 		for (int i = m; i < len; i += step) {
 			int j = i + max;
 
-			short tr = data[i] - data[j];
-			short ti = data[i + 1] - data[j + 1];
+			int tr = data[i] - data[j];
+			int ti = data[i + 1] - data[j + 1];
 
 			data[i] += data[j];
 			data[i + 1] += data[j + 1];
@@ -164,18 +164,18 @@ void fft_pre(short *data, int len) {
 }
 
 
-void fft_firstHalf(short *data, int len)
+void fft_firstHalf(int *data, int len)
 {
 	len <<= 1;
 	int max = NINPUTS / 2;
 	int wstep = 2;
 	while (max > 2) {
-		short *wpr = wprBase;
-		short *wpi = wpiBase;
+		int *wpr = wprBase;
+		int *wpi = wpiBase;
 
 		for (int m = 0; m < max; m += 2) {
-			short wr = *wpr;
-			short wi = *wpi;
+			int wr = *wpr;
+			int wi = *wpi;
 			wpr += wstep;
 			wpi += wstep;
 
@@ -184,8 +184,8 @@ void fft_firstHalf(short *data, int len)
 			for (int i = m; i < len / 2; i += step) {
 				int j = i + max;
 
-				short tr = data[i] - data[j];
-				short ti = data[i + 1] - data[j + 1];
+				int tr = data[i] - data[j];
+				int ti = data[i + 1] - data[j + 1];
 
 				data[i] += data[j];
 				data[i + 1] += data[j + 1];
@@ -207,18 +207,18 @@ void fft_firstHalf(short *data, int len)
 
 }
 
-void fft3_secondHalf(short *data, int len)
+void fft3_secondHalf(int *data, int len)
 {
 	len <<= 1;
 	int max = NINPUTS / 2;
 	int wstep = 2;
 	while (max > 2) {
-		short *wpr = wprBase;
-		short *wpi = wpiBase;
+		int *wpr = wprBase;
+		int *wpi = wpiBase;
 
 		for (int m = 0; m < max; m += 2) {
-			short wr = *wpr;
-			short wi = *wpi;
+			int wr = *wpr;
+			int wi = *wpi;
 			wpr += wstep;
 			wpi += wstep;
 
@@ -227,8 +227,8 @@ void fft3_secondHalf(short *data, int len)
 			for (int i = m + len / 2; i < len; i += step) {
 				int j = i + max;
 
-				short tr = data[i] - data[j];
-				short ti = data[i + 1] - data[j + 1];
+				int tr = data[i] - data[j];
+				int ti = data[i + 1] - data[j + 1];
 
 				data[i] += data[j];
 				data[i + 1] += data[j + 1];
@@ -252,7 +252,7 @@ void fft3_secondHalf(short *data, int len)
 
 
 
-void merge(short *data, int len)
+void merge(int *data, int len)
 {
 	len <<= 1;
 	{
@@ -262,8 +262,8 @@ void merge(short *data, int len)
 		for (int i = 0; i < len; i += step) {
 			int j = i + max;
 
-			short tr = data[i] - data[j];
-			short ti = data[i + 1] - data[j + 1];
+			int tr = data[i] - data[j];
+			int ti = data[i + 1] - data[j + 1];
 
 			data[i] += data[j];
 			data[i + 1] += data[j + 1];
@@ -280,7 +280,7 @@ void merge(short *data, int len)
 	int j = 1;
 	for (int i = 1; i < len; i += 2) {
 		if (j > i) {
-			short tmp;
+			int tmp;
 			SWAP(data[j], data[i]);
 			SWAP(data[j + 1], data[i + 1]);
 		}
