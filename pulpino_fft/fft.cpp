@@ -316,16 +316,7 @@ void merge(int *data, int len)
 }
 int main()
 {
-	FILE *fp;
-	fp = fopen("vidu.txt", "w+");
-	for(int i = 0; i < 2048*2; i = i + 2)
-	{
-		
-		fprintf(fp, "%d	", buf[i]);
-		
-	}	
-	fprintf(fp, "\n");
-	
+
 	/////////////////////////////////////////
 	fft_pre(buf, NINPUTS);   // Core 0
 	fft_firstHalf(buf, NINPUTS); //core 1
@@ -333,15 +324,5 @@ int main()
 	merge(buf, NINPUTS);			// core 3
 	//===============================================//
 	
-	
-	
-   	fprintf(fp, "Vi du kiem tra ham fprintf ...\n");
-   	for(int i = 1; i < 2048*2; i = i +2)
-   	{
-   		fprintf(fp, "%d	", buf[i]);
-   		// fprintf(fp, "0, ");
-   	}
-	
-
 	return 0;
 }
